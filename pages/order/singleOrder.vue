@@ -1,0 +1,242 @@
+<template>
+	<view class="body">
+		<view class="time_clock  ">
+			<image class="clock_image" src="/static/img/clock.png"></image>
+			<view class="goods_time">{{order_time}}</view>
+		</view>
+		<view class="main">
+			<view class="goods" v-for="(item,index) in list" :key="index">
+				<image :src="item.img" />
+				<view>
+					<view>{{item.name}}</view>
+					<view class="num">数量:{{item.num}}</view>
+					<view class="money">￥{{item.food_price}}</view>
+					<image src="../../static/img/del.png" class="del_img" v-bind:class="{open:display}" @click="del(item.food_id)"></image>
+				</view>
+			</view>
+		</view>
+		<center>
+			<hr style="border-top:0.5rpx solid #a1a0b5; width: 80%; size: 1rpx; align:center;" />
+		</center>
+
+		<view class="bottom_money">
+			<text class="need_pay"> 合计：</text>
+			<text class="totalMoney">￥{{total_price}}</text>
+		</view>
+		<view class="state_btn">
+			<text class="_btn" @click="revise()">{{text}}</text>
+			<text class="_btn2" @click="Settlement()">结算</text>
+		</view>
+		<warningBox v-model="show" title='结算该订单' text='是否结算该订单?确认后无法取消!!!' @confirm='confirm' />
+	</view>
+</template>
+
+<script>
+	import warningBox from "@/components/warning-box/warning-box.vue";
+	export default {
+		components: {
+			warningBox
+		},
+		data() {
+			return {
+				orderId:null,
+				list: [],
+				order_time: 2020,
+				total_price: {},
+				display: true,
+				text: "修改订单",
+				show: false
+			}
+		},
+		onLoad(option) {
+			console.log(option.desk_id)
+			console.log(option.order_id)
+			this.orderId=option.order_id
+			//服务端查看订单接口
+			uni.request({
+				url: this.$apiPath + "?m=admin&c=index&a=order",
+				dataType: 'json',
+				data: {
+					order_id: option.order_id
+				},
+				success: (res) => {
+					// console.log(res.data.data)
+					this.list = res.data.data.order_detail;
+					this.order_time = res.data.data.start_time;
+					this.total_price = res.data.data.price
+				}
+			})
+		},
+		methods: {
+			revise() {
+				this.display = !this.display;
+				if (this.text == "修改订单") {
+					this.text = "确认";
+				} else {
+					this.text = "修改订单";
+				}
+			},
+			del(id) {
+				console.log("点击了减少数量按钮", id)
+			},
+			Settlement() {
+				console.log("点击了结算按钮");
+				this.show = true;
+			},
+			confirm() {
+				console.log("已经结算了订单");
+				uni.request({
+					url: this.$apiPath +"?m=admin&c=index&a=changeOrderStatus",
+					dataType:"json",
+					method:'POST',
+					header:{
+						"content-type": "application/x-www-form-urlencoded"
+					},
+					data:{
+						order_id:this.orderId,
+						status:1
+					},
+					success:(res)=>{
+						if (res.data.error != 0) {
+							alert(res.data.msg)
+						} else {
+							//修改订单状态成功,跳转到订单列表页
+							uni.navigateBack({
+							    url: 'pages/order/index'
+							});
+						}
+					}
+				})
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	.open {
+		display: none;
+	}
+
+	page {
+		background: #2D335A;
+		background-image: linear-gradient(45deg, #4D395C, #253155);
+		height: 100%;
+	}
+
+	.body {
+		padding-top: 20rpx;
+	}
+
+	.goods_time {
+		font-size: 25upx;
+		color: #ffffff;
+		opacity: 0.7;
+		margin: 0 10rpx 10rpx 30rpx;
+
+	}
+
+	.clock_image {
+		width: 33.3upx;
+		height: 33.3upx;
+		margin: 0 10rpx 10rpx 30rpx;
+		float: left;
+	}
+
+	.main {
+		margin: 0rpx 20rpx 20rpx 20rpx;
+		background-color: #a1a0b5;
+		padding: 20rpx 20rpx 10rpx 20rpx;
+		border-radius: 15rpx;
+		opacity: 0.8;
+
+		.goods {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			justify-content: flex-start;
+			align-items: center;
+			align-content: center;
+			margin-bottom: 10rpx;
+			position: relative;
+
+			&>image {
+				width: 100rpx;
+				height: 100rpx;
+				margin-right: 16rpx;
+				border-radius: 10rpx;
+			}
+
+			.num {
+				font-size: 24rpx;
+				color: #ffffff;
+				opacity: 0.7;
+			}
+
+			.money {
+				font-size: 33rpx;
+				font-weight: bold;
+				color: #000000;
+				position: absolute;
+				right: 80rpx;
+				bottom: 20rpx;
+			}
+
+			.del_img {
+				width: 60rpx;
+				height: 60rpx;
+				position: absolute;
+				right: 0rpx;
+				bottom: 20rpx;
+			}
+		}
+	}
+
+	.bottom_money {
+		margin-top: 20rpx;
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.need_pay {
+		color: #00aaff;
+		font-size: 28upx;
+		font-weight: 900;
+	}
+
+	.totalMoney {
+		color: #fa2a2d;
+		font-size: 31upx;
+		margin-right: 33upx;
+	}
+
+	.state_btn {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 32.7upx;
+		margin-right: 33upx;
+	}
+
+	._btn {
+		width: 153upx;
+		height: 58upx;
+		text-align: center;
+		color: #0d8ada;
+		font-size: 28upx;
+		line-height: 58upx;
+		border: 3upx solid #0d8ada;
+		border-radius: 6upx;
+		margin-right: 30rpx;
+	}
+
+	._btn2 {
+		width: 153upx;
+		height: 58upx;
+		text-align: center;
+		color: #ff007f;
+		font-size: 28upx;
+		line-height: 58upx;
+		border: 3upx solid #ff007f;
+		border-radius: 6upx;
+	}
+</style>

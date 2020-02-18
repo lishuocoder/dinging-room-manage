@@ -1,0 +1,45 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/order/index",
+			"style": {
+				"navigationBarTitleText": "订单管理"
+			}
+		},
+		{
+			"path": "pages/foods/foods",
+			"style": {
+				"navigationBarTitleText": "菜品管理"
+			}
+		},
+		{
+			"path": "pages/order/singleOrder",
+			"style": {
+				"navigationBarTitleText": "订单"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "手机点餐服务端",
+		"navigationBarBackgroundColor": "#a1a0b5",
+		"backgroundColor": "#fff6ef"
+	},
+	"tabBar": {
+		"color": "#8d8d8d",
+		"selectedColor": "#1f9cdd",
+		"borderStyle": "black",
+		"backgroundColor": "#4f496c",
+		"list": [{
+			"pagePath": "pages/order/index",
+			"iconPath": "static/tabbar/order.png",
+			"selectedIconPath": "static/tabbar/order1.png",
+			"text": "订单管理"
+		}, {
+			"pagePath": "pages/foods/foods",
+			"iconPath": "static/tabbar/food.png",
+			"selectedIconPath": "static/tabbar/food1.png",
+			"text": "菜品管理"
+		}]
+	}
+}
