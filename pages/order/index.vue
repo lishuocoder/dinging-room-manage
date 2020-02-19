@@ -4,7 +4,8 @@
 			<view class='test-item' v-for="item in deskList">
 				<zai-lattice shadow
 					:progressPercent = 'time(item)'
-					 title='座位'
+					:progressColor = 'textColor(item.id)'
+					 title='桌位'
 					:numColor='textColor(item.id)'
 					:num='item.id' 
 					:unit='statusName(item.status).name'
@@ -63,10 +64,12 @@
 					return 0;
 				}
 				var nowtimestamp = Date.parse(new Date())/1000;//获取当前时间(秒)
-				var Time = new Date(order.order.start_time);
+				var order_start_time = order.order.start_time.replace(/\-/g, '/');
+				var Time = new Date(order_start_time);
 				var timestemp =Time.getTime()/1000;//订单时间(秒)
 				var timeNum=parseInt((nowtimestamp-timestemp)/60);
-				console.log("当前时间:"+nowtimestamp,"订单时间:"+timestemp,"返回的分钟:"+timeNum)
+				timeNum = timeNum>100?100:timeNum
+				// console.log("当前时间:"+nowtimestamp,"订单时间:"+timestemp,"返回的分钟:"+timeNum)
 				return timeNum
 			},
 			statusName(status) {
