@@ -1,6 +1,12 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/order/index",
 			"style": {
 				"navigationBarTitleText": "订单管理"
@@ -9,7 +15,19 @@
 		{
 			"path": "pages/foods/foods",
 			"style": {
-				"navigationBarTitleText": "菜品管理"
+				"navigationBarTitleText": "菜品管理",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [{
+								"text": "退出登录",
+								"fontSize": "12",
+								"float": "left",
+								"color": "#323458"
+							}
+						]
+					}
+				}
 			}
 		},
 		{

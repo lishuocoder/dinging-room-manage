@@ -11,7 +11,7 @@
 					<view>{{item.name}}</view>
 					<view class="num">数量:{{item.num}}</view>
 					<view class="money">￥{{item.food_price}}</view>
-					<image src="../../static/img/del.png" class="del_img" v-bind:class="{open:display}" @click="del(item.food_id)"></image>
+					<image src="../../static/img/del.png" class="del_img" v-bind:class="{open:display}" @click="del(item,index)"></image>
 				</view>
 			</view>
 		</view>
@@ -44,11 +44,18 @@
 				order_time: 2020,
 				total_price: {},
 				display: true,
-				text: "修改订单",
-				show: false
+				text: "修改",
+				show: false,
+				Token:0
 			}
 		},
 		onLoad(option) {
+			uni.getStorage({
+			    key: 'token',
+			    success: (res) => {
+					this.Token=res.data
+			    }
+			});
 			console.log(option.desk_id)
 			console.log(option.order_id)
 			this.orderId=option.order_id
@@ -57,10 +64,11 @@
 				url: this.$apiPath + "?m=admin&c=index&a=order",
 				dataType: 'json',
 				data: {
-					order_id: option.order_id
+					order_id: option.order_id,
+					token: this.Token
 				},
 				success: (res) => {
-					// console.log(res.data.data)
+					console.log(res.data.data)
 					this.list = res.data.data.order_detail;
 					this.order_time = res.data.data.start_time;
 					this.total_price = res.data.data.price
@@ -70,21 +78,45 @@
 		methods: {
 			revise() {
 				this.display = !this.display;
-				if (this.text == "修改订单") {
+				if (this.text == "修改") {
 					this.text = "确认";
 				} else {
-					this.text = "修改订单";
+					this.text = "修改";
 				}
 			},
-			del(id) {
-				console.log("点击了减少数量按钮", id)
+			del(item,index) { //有bug待定---------------------
+				var orderId=item.order_id;
+				var orderDetailId=item.id;
+				// console.log(orderId,orderDetailId)
+				uni.request({
+					url:this.$apiPath+"?m=admin&c=index&a=changeOrderNum",
+					method:'POST',
+					header:{
+						"content-type": "application/x-www-form-urlencoded"
+					},
+					data:{
+						token: this.Token,
+						order_id:orderId,
+						action: "decr",
+						order_detail_id:orderDetailId
+					},
+					success:(res)=>{
+						if(res.data.error == 0){
+							item.num-=1
+							// console.log(this.list[index])
+							this.list.splice(index, 1, item)
+						}else{
+							alert(res.data.msg)
+						}
+						
+					}
+				}) 
 			},
 			Settlement() {
 				console.log("点击了结算按钮");
 				this.show = true;
 			},
 			confirm() {
-				console.log("已经结算了订单");
 				uni.request({
 					url: this.$apiPath +"?m=admin&c=index&a=changeOrderStatus",
 					dataType:"json",
@@ -94,7 +126,8 @@
 					},
 					data:{
 						order_id:this.orderId,
-						status:1
+						status:1,
+						token: this.Token
 					},
 					success:(res)=>{
 						if (res.data.error != 0) {
@@ -188,6 +221,9 @@
 				right: 0rpx;
 				bottom: 20rpx;
 			}
+			.del_img:active{
+				transform: translate(4rpx, 4rpx);
+			}
 		}
 	}
 
@@ -238,5 +274,8 @@
 		line-height: 58upx;
 		border: 3upx solid #ff007f;
 		border-radius: 6upx;
+	}
+	._btn:active,._btn2:active{
+		transform: translate(2rpx, 2rpx);
 	}
 </style>

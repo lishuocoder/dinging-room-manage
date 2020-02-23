@@ -9,7 +9,7 @@
 			</view>
 			<view class="main">
 				<!-- current：当前所在滑块的index  vertical：滑块方向是否为纵向 duration：滑动动画时长-->
-				<swiper class="swiper" :style="{ 'height':scrollHeight }" :current="leftIndex" vertical="true"
+				<swiper class="swiper" :style="{ 'height':scrollHeight }" :current="leftIndex" @change="swiperChange" vertical="true"
 				 duration="300">
 					<!-- 遍历菜品分类 -->
 					<swiper-item v-for="(item,index) in typeList" :key="index">
@@ -59,7 +59,13 @@
 					// console.log(res.data.data[0].id)
 					this.getFoodsList(res.data.data[0].id);
 				}
-			})
+			}),
+			/* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
+			uni.getSystemInfo({
+				success: (res) => {
+					this.scrollHeight = `${res.windowHeight}px`;
+				}
+			});
 		},
 		methods: {
 			/* 左侧导航点击 */
@@ -68,6 +74,12 @@
 				this.leftIndex = Number(index);
 				this.getFoodsList(e.currentTarget.dataset.id);
 				// console.log(e.currentTarget.dataset.id);
+			},
+			/* 轮播图切换 */
+			swiperChange(e) {
+				this.getFoodsList(this.typeList[e.detail.current].id);
+				let index = e.detail.current;
+				this.leftIndex = Number(index);
 			},
 			getFoodsList(typeId) {
 				uni.request({
@@ -88,7 +100,13 @@
 					this.text = "上架";
 				}
 			}
-		}
+		},
+		onNavigationBarButtonTap() {
+			
+			uni.navigateTo({
+			    url: '/pages/login/login'
+			});
+		},
 	}
 </script>
 
@@ -108,8 +126,6 @@
 		align-content: flex-start;
 		font-size: 28rpx;
 		margin-right: 30rpx;
-		margin-top: 40rpx;
-
 
 		.left {
 			width: 176rpx;
