@@ -26,7 +26,7 @@
 										<view class="money"> ￥{{item.price}}</view>
 									</view>
 									<view class="state_btn">
-										<text class="_btn" @click="revise(item.status)">{{text}}</text>
+										<text class="_btn" @click="revise(item.id,item.status,index)">{{item.status | brand}}</text>
 									</view>
 								</view>
 							</view>
@@ -46,26 +46,47 @@
 				foodsList: [],
 				scrollHeight: '500px',
 				leftIndex: 0,
-				text: "下架"
+				zhuangtai: 1,
+				Token: 0,
+				test:1,
 			};
 		},
 		onLoad() {
-			uni.request({
-				//服务端分类接口
-				url: this.$apiPath + "?c=type&a=index",
-				dataType: 'json',
+			//获取存入的token
+			uni.getStorage({
+				key: 'token',
 				success: (res) => {
-					this.typeList = res.data.data;
-					// console.log(res.data.data[0].id)
-					this.getFoodsList(res.data.data[0].id);
-				}
-			}),
-			/* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
-			uni.getSystemInfo({
-				success: (res) => {
-					this.scrollHeight = `${res.windowHeight}px`;
+					this.Token = res.data
 				}
 			});
+			uni.request({
+					//服务端分类接口
+					url: this.$apiPath + "?c=type&a=index",
+					dataType: 'json',
+					success: (res) => {
+						this.typeList = res.data.data;
+						// console.log(res.data.data[0].id)
+						this.getFoodsList(res.data.data[0].id);
+					}
+				}),
+				/* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
+				uni.getSystemInfo({
+					success: (res) => {
+						this.scrollHeight = `${res.windowHeight}px`;
+					}
+				});
+		},
+		//写一个上下架状态过滤器
+		filters: {
+			brand(val) {
+				var brand;
+				if (val == 0) {
+					brand = "上架";
+				} else if (val == 1) {
+					brand = "下架";
+				}
+				return brand
+			}
 		},
 		methods: {
 			/* 左侧导航点击 */
@@ -84,8 +105,9 @@
 			getFoodsList(typeId) {
 				uni.request({
 					//菜品接口
-					url: this.$apiPath + "?c=food&a=index",
+					url: this.$apiPath + "?m=admin&c=food&a=index",
 					data: {
+						token: this.Token,
 						type_id: typeId
 					},
 					success: (res) => {
@@ -93,18 +115,34 @@
 					}
 				})
 			},
-			revise(status) {
-				if (status == 1) {
-					this.text = "下架";
+			revise(foodID, status, index) {
+				if (this.foodsList[index].status == 1) {
+					this.foodsList[index].status = 0
 				} else {
-					this.text = "上架";
+					this.foodsList[index].status = 1
 				}
+				//修改菜品状态接口
+				uni.request({
+					url: this.$apiPath + "?m=admin&c=index&a=foodStatus",
+					method: 'POST',
+					header: {
+						"content-type": "application/x-www-form-urlencoded"
+					},
+					data: {
+						token: this.Token,
+						food_id: foodID,
+						status: this.foodsList[index].status
+					},
+					success:(res)=> {
+						console.log(res)
+					}
+				})
 			}
 		},
+		//退出登录方法
 		onNavigationBarButtonTap() {
-			
 			uni.navigateTo({
-			    url: '/pages/login/login'
+				url: '/pages/login/login'
 			});
 		},
 	}
@@ -251,6 +289,10 @@
 				border: 3rpx solid #0d8ada;
 				border-radius: 6rpx;
 				// margin-right: 30rpx;
+			}
+
+			._btn:active {
+				transform: translate(4rpx, 4rpx);
 			}
 		}
 	}

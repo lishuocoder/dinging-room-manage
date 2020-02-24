@@ -44,7 +44,7 @@
 				order_time: 2020,
 				total_price: {},
 				display: true,
-				text: "修改",
+				text: "修改订单",
 				show: false,
 				Token:0
 			}
@@ -78,10 +78,10 @@
 		methods: {
 			revise() {
 				this.display = !this.display;
-				if (this.text == "修改") {
+				if (this.text == "修改订单") {
 					this.text = "确认";
 				} else {
-					this.text = "修改";
+					this.text = "修改订单";
 				}
 			},
 			del(item,index) { //有bug待定---------------------
@@ -107,8 +107,7 @@
 							this.list.splice(index, 1, item)
 						}else{
 							alert(res.data.msg)
-						}
-						
+						}	
 					}
 				}) 
 			},
