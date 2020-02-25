@@ -1,9 +1,9 @@
 {
-    "name" : "在线点餐服务端",
+    "name" : "点餐系统服务端",
     "appid" : "__UNI__1EAABDB",
     "description" : "",
-    "versionName" : "1.0.6",
-    "versionCode" : 106,
+    "versionName" : "1.0.7",
+    "versionCode" : 107,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {

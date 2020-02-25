@@ -20,9 +20,10 @@
 					"bounce": "none",
 					"titleNView": {
 						"buttons": [{
-								"text": "退出登录",
-								"fontSize": "12",
-								"float": "left",
+								"fontSrc": "/static/tabbar/iconfont.ttf",
+								"text": "\ue66e   ",
+								"fontSize": "18",
+								"float": "right",
 								"color": "#323458"
 							}
 						]

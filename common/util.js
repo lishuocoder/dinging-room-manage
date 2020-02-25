@@ -1,5 +1,5 @@
-const apiPath ='http://dining-room3.local/' //API根路径
-//const apiPath ='http://lishuo-api.liyangweb.com/' //API根路径
+///const apiPath ='http://dining-room3.local/' //API根路径
+const apiPath ='http://lishuo-api.liyangweb.com/' //API根路径
 
 //简化uni.request
 const get = (url, data = '', method = 'GET') => {

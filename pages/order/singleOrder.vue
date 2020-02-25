@@ -5,7 +5,7 @@
 			<view class="goods_time">{{order_time}}</view>
 		</view>
 		<view class="main">
-			<view class="goods" v-for="(item,index) in list" :key="index">
+			<view class="goods"  v-for="(item,index) in list" :key="index">
 				<image :src="item.img" />
 				<view>
 					<view>{{item.name}}</view>
@@ -59,21 +59,8 @@
 			console.log(option.desk_id)
 			console.log(option.order_id)
 			this.orderId=option.order_id
-			//服务端查看订单接口
-			uni.request({
-				url: this.$apiPath + "?m=admin&c=index&a=order",
-				dataType: 'json',
-				data: {
-					order_id: option.order_id,
-					token: this.Token
-				},
-				success: (res) => {
-					console.log(res.data.data)
-					this.list = res.data.data.order_detail;
-					this.order_time = res.data.data.start_time;
-					this.total_price = res.data.data.price
-				}
-			})
+			//调用查看订单接口
+			this.lookOrder(option.order_id);
 		},
 		methods: {
 			revise() {
@@ -84,10 +71,28 @@
 					this.text = "修改订单";
 				}
 			},
-			del(item,index) { //有bug待定---------------------
+			lookOrder(order_id){
+				//服务端查看订单接口
+				uni.request({
+					url: this.$apiPath + "?m=admin&c=index&a=order",
+					dataType: 'json',
+					data: {
+						order_id: order_id,
+						token: this.Token
+					},
+					success: (res) => {
+						console.log(res.data.data)
+						this.list = res.data.data.order_detail;
+						this.order_time = res.data.data.start_time;
+						this.total_price = res.data.data.price
+					}
+				})
+			},
+			del(item,index) { 
 				var orderId=item.order_id;
 				var orderDetailId=item.id;
 				// console.log(orderId,orderDetailId)
+				//服务端修改订单接口
 				uni.request({
 					url:this.$apiPath+"?m=admin&c=index&a=changeOrderNum",
 					method:'POST',
@@ -105,6 +110,7 @@
 							item.num-=1
 							// console.log(this.list[index])
 							this.list.splice(index, 1, item)
+							this.lookOrder(orderId);//减了数量之后调用订单接口来更新总价数据
 						}else{
 							alert(res.data.msg)
 						}	
@@ -164,7 +170,6 @@
 		color: #ffffff;
 		opacity: 0.7;
 		margin: 0 10rpx 10rpx 30rpx;
-
 	}
 
 	.clock_image {
