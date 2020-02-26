@@ -5,7 +5,7 @@
 			<view class="goods_time">{{order_time}}</view>
 		</view>
 		<view class="main">
-			<view class="goods"  v-for="(item,index) in list" :key="index">
+			<view class="goods" v-for="(item,index) in formList" :key="index">
 				<image :src="item.img" />
 				<view>
 					<view>{{item.name}}</view>
@@ -39,28 +39,38 @@
 		},
 		data() {
 			return {
-				orderId:null,
+				orderId: null,
 				list: [],
 				order_time: 2020,
 				total_price: {},
 				display: true,
 				text: "修改订单",
 				show: false,
-				Token:0
+				Token: 0
 			}
 		},
 		onLoad(option) {
 			uni.getStorage({
-			    key: 'token',
-			    success: (res) => {
-					this.Token=res.data
-			    }
+				key: 'token',
+				success: (res) => {
+					this.Token = res.data
+				}
 			});
 			console.log(option.desk_id)
 			console.log(option.order_id)
-			this.orderId=option.order_id
+			this.orderId = option.order_id
 			//调用查看订单接口
 			this.lookOrder(option.order_id);
+		},
+		computed: {
+			//增加一个过滤器，将list里的菜品个数等于0的菜品过滤出去，返回个数非0的菜品
+			formList: function() {
+				return this.list.filter(function(item) {
+					if (item.num != 0) {
+						return item;
+					}
+				})
+			}
 		},
 		methods: {
 			revise() {
@@ -71,7 +81,7 @@
 					this.text = "修改订单";
 				}
 			},
-			lookOrder(order_id){
+			lookOrder(order_id) {
 				//服务端查看订单接口
 				uni.request({
 					url: this.$apiPath + "?m=admin&c=index&a=order",
@@ -88,34 +98,34 @@
 					}
 				})
 			},
-			del(item,index) { 
-				var orderId=item.order_id;
-				var orderDetailId=item.id;
+			del(item, index) {
+				var orderId = item.order_id;
+				var orderDetailId = item.id;
 				// console.log(orderId,orderDetailId)
 				//服务端修改订单接口
 				uni.request({
-					url:this.$apiPath+"?m=admin&c=index&a=changeOrderNum",
-					method:'POST',
-					header:{
+					url: this.$apiPath + "?m=admin&c=index&a=changeOrderNum",
+					method: 'POST',
+					header: {
 						"content-type": "application/x-www-form-urlencoded"
 					},
-					data:{
+					data: {
 						token: this.Token,
-						order_id:orderId,
+						order_id: orderId,
 						action: "decr",
-						order_detail_id:orderDetailId
+						order_detail_id: orderDetailId
 					},
-					success:(res)=>{
-						if(res.data.error == 0){
-							item.num-=1
+					success: (res) => {
+						if (res.data.error == 0) {
+							item.num -= 1
 							// console.log(this.list[index])
 							this.list.splice(index, 1, item)
-							this.lookOrder(orderId);//减了数量之后调用订单接口来更新总价数据
-						}else{
+							this.lookOrder(orderId); //减了数量之后调用订单接口来更新总价数据
+						} else {
 							alert(res.data.msg)
-						}	
+						}
 					}
-				}) 
+				})
 			},
 			Settlement() {
 				console.log("点击了结算按钮");
@@ -123,24 +133,24 @@
 			},
 			confirm() {
 				uni.request({
-					url: this.$apiPath +"?m=admin&c=index&a=changeOrderStatus",
-					dataType:"json",
-					method:'POST',
-					header:{
+					url: this.$apiPath + "?m=admin&c=index&a=changeOrderStatus",
+					dataType: "json",
+					method: 'POST',
+					header: {
 						"content-type": "application/x-www-form-urlencoded"
 					},
-					data:{
-						order_id:this.orderId,
-						status:1,
+					data: {
+						order_id: this.orderId,
+						status: 1,
 						token: this.Token
 					},
-					success:(res)=>{
+					success: (res) => {
 						if (res.data.error != 0) {
 							alert(res.data.msg)
 						} else {
 							//修改订单状态成功,跳转到订单列表页
 							uni.navigateBack({
-							    url: 'pages/order/index'
+								url: 'pages/order/index'
 							});
 						}
 					}
@@ -225,7 +235,8 @@
 				right: 0rpx;
 				bottom: 20rpx;
 			}
-			.del_img:active{
+
+			.del_img:active {
 				transform: translate(4rpx, 4rpx);
 			}
 		}
@@ -279,7 +290,9 @@
 		border: 3upx solid #ff007f;
 		border-radius: 6upx;
 	}
-	._btn:active,._btn2:active{
+
+	._btn:active,
+	._btn2:active {
 		transform: translate(2rpx, 2rpx);
 	}
 </style>
