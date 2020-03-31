@@ -8,6 +8,13 @@
 			<input class="zai-input" v-model="passData" password placeholder="密码" />
 			<button class="zai-btn" @click="startLogin()">立即登录</button>
 		</view>
+		<view class="bottom_con">
+			<view>
+				<text class="text_link">本软件仅限餐厅工作人员使用</text>
+				<text class="text_link">严禁泄露账号密码</text>
+			</view>
+			<text class="text_copy">版权所有@2019-2029-LiShuoCoder保留一切权利</text>
+		</view>
 	</view>
 </template>
 
@@ -125,5 +132,24 @@
 	/*按钮点击效果*/
 	.zai-btn.button-hover {
 		transform: translate(2rpx, 2rpx);
+	}
+	
+	.bottom_con {
+		/* background-color: #4CD964; */
+		width: 90%;
+		margin-left: auto;
+		position: fixed;
+		bottom: 20rpx;
+		padding-left: 15%;
+	}
+	.text_link {
+		color: #005BBA;
+		font-size: 20.8rpx;
+		margin-right: 20rpx;
+	}
+	
+	.text_copy {
+		color: rgba(26, 26, 26, 0.5);
+		font-size: 21rpx;
 	}
 </style>

@@ -136,7 +136,13 @@
 					success:(res)=> {
 						console.log(res)
 					}
-				})
+				}),
+				// 振动反馈
+				uni.vibrateShort({
+					success: function() {
+						console.log('success');
+					}
+				});
 			}
 		},
 		//退出登录方法
@@ -163,7 +169,7 @@
 		align-items: flex-start;
 		align-content: flex-start;
 		font-size: 28rpx;
-		margin-right: 30rpx;
+		// margin-right: 30rpx;
 
 		.left {
 			width: 176rpx;
@@ -172,7 +178,7 @@
 			line-height: 97rpx;
 			box-sizing: border-box;
 			font-size: 29rpx;
-			margin-left: 28rpx;
+			// margin-left: 28rpx;
 
 			.item {
 				padding-left: 20rpx;
@@ -197,7 +203,7 @@
 
 				&.active,
 				&:active {
-					color: #00d8a0;
+					color: #0d8ada;
 					background-color: #4f496c;
 				}
 			}

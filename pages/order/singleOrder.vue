@@ -80,6 +80,12 @@
 				} else {
 					this.text = "修改订单";
 				}
+				// 震动反馈
+				uni.vibrateShort({
+					success: function() {
+						console.log('success');
+					}
+				});
 			},
 			lookOrder(order_id) {
 				//服务端查看订单接口
@@ -130,6 +136,12 @@
 			Settlement() {
 				console.log("点击了结算按钮");
 				this.show = true;
+				// 震动反馈
+				uni.vibrateShort({
+					success: function() {
+						console.log('success');
+					}
+				});
 			},
 			confirm() {
 				uni.request({
@@ -215,7 +227,7 @@
 
 			.num {
 				font-size: 24rpx;
-				color: #ffffff;
+				color: #18422e;
 				opacity: 0.7;
 			}
 
@@ -224,7 +236,7 @@
 				font-weight: bold;
 				color: #000000;
 				position: absolute;
-				right: 80rpx;
+				right: 68rpx;
 				bottom: 20rpx;
 			}
 
@@ -233,7 +245,7 @@
 				height: 60rpx;
 				position: absolute;
 				right: 0rpx;
-				bottom: 20rpx;
+				bottom: 15rpx;
 			}
 
 			.del_img:active {
@@ -258,7 +270,7 @@
 	.totalMoney {
 		color: #fa2a2d;
 		font-size: 31upx;
-		margin-right: 33upx;
+		margin-right: 50upx;
 	}
 
 	.state_btn {
@@ -284,11 +296,12 @@
 		width: 153upx;
 		height: 58upx;
 		text-align: center;
-		color: #ff007f;
+		color: #ec070b;
 		font-size: 28upx;
 		line-height: 58upx;
-		border: 3upx solid #ff007f;
+		border: 3upx solid #ec070b;
 		border-radius: 6upx;
+		margin-right: 17rpx;
 	}
 
 	._btn:active,
