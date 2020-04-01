@@ -205,6 +205,7 @@
 				&:active {
 					color: #0d8ada;
 					background-color: #4f496c;
+					border-left: 2px solid #0d8ada;
 				}
 			}
 		}
