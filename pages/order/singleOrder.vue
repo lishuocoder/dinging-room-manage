@@ -11,7 +11,9 @@
 					<view>{{item.name}}</view>
 					<view class="num">数量:{{item.num}}</view>
 					<view class="money">￥{{item.food_price}}</view>
-					<image src="../../static/img/del.png" class="del_img" v-bind:class="{open:display}" @click="del(item,index)"></image>
+					<transition name="fade">
+						<image src="../../static/img/del.png" class="del_img" v-if="display" @click="del(item,index)"></image>
+					</transition>
 				</view>
 			</view>
 		</view>
@@ -43,7 +45,7 @@
 				list: [],
 				order_time: 2020,
 				total_price: {},
-				display: true,
+				display: false,
 				text: "修改订单",
 				show: false,
 				Token: 0
@@ -173,10 +175,12 @@
 </script>
 
 <style lang="scss">
-	.open {
-		visibility:hidden;
-		opacity: 0;
-		transition: 0.5s;
+	// vue的过渡动画
+	.fade-enter-active, .fade-leave-active {
+	  transition: opacity .5s;
+	}
+	.fade-enter, .fade-leave-to{
+	  opacity: 0;
 	}
 
 	page {
@@ -293,7 +297,7 @@
 		border: 3upx solid #0d8ada;
 		border-radius: 6upx;
 		margin-right: 30rpx;
-		box-shadow:1px 1px 6px #000;
+		box-shadow:1px 1px 9px #000;
 	}
 
 	._btn2 {

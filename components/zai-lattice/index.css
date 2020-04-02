@@ -4,11 +4,9 @@
     background: #4F496C;
     color: #fff;
     border-radius: 30upx;
-	box-shadow:3px 2px 8px #000;
+	box-shadow:3px 2px 8px #000; 
 }
-.zai-lattice-box-shadow{
-	box-shadow: 0 4upx 30upx 0 #3c3556d9;
-}
+
 .zai-lattice-box .zai-lattice-box-p{
 	padding: 40upx;
     position: relative;
