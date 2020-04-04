@@ -175,12 +175,8 @@
 </script>
 
 <style lang="scss">
-	// vue的过渡动画
-	.fade-enter-active, .fade-leave-active {
-	  transition: opacity .5s;
-	}
-	.fade-enter, .fade-leave-to{
-	  opacity: 0;
+	.open {
+		display: none;
 	}
 
 	page {
@@ -213,8 +209,7 @@
 		padding: 20rpx 20rpx 10rpx 20rpx;
 		border-radius: 15rpx;
 		opacity: 0.8;
-		box-shadow:3px 2px 8px #000;
-		
+
 		.goods {
 			display: flex;
 			flex-direction: row;
@@ -297,7 +292,10 @@
 		border: 3upx solid #0d8ada;
 		border-radius: 6upx;
 		margin-right: 30rpx;
+<<<<<<< HEAD
 		box-shadow:1px 1px 9px #000;
+=======
+>>>>>>> temp
 	}
 
 	._btn2 {
@@ -310,7 +308,6 @@
 		border: 3upx solid #ec070b;
 		border-radius: 6upx;
 		margin-right: 17rpx;
-		box-shadow:1px 1px 6px #000;
 	}
 
 	._btn:active,
