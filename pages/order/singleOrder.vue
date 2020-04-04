@@ -292,10 +292,7 @@
 		border: 3upx solid #0d8ada;
 		border-radius: 6upx;
 		margin-right: 30rpx;
-<<<<<<< HEAD
 		box-shadow:1px 1px 9px #000;
-=======
->>>>>>> temp
 	}
 
 	._btn2 {
