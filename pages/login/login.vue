@@ -77,7 +77,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style>
 	page {
 		background: #2D335A;
 		background-image: linear-gradient(45deg, #4D395C, #253155);
@@ -94,15 +94,13 @@
 		margin-bottom: 200rpx;
 		margin-left: auto;
 		margin-right: auto;
-			 &>image { 
-				width: 161rpx;
-				height: 161rpx;
-				border-radius: 50%;
-				box-shadow:3px 2px 8px #000;
-			}
 	}
 
-	
+	.header image {
+		width: 161rpx;
+		height: 161rpx;
+		border-radius: 50%;
+	}
 
 	.zai-box {
 		padding: 0 70rpx;
@@ -120,7 +118,6 @@
 		padding: 30rpx 40rpx;
 		font-size: 30rpx;
 		color: #94afce;
-		box-shadow:3px 2px 8px #000;
 	}
 
 	.zai-btn {
@@ -130,7 +127,6 @@
 		border: 0;
 		border-radius: 100rpx;
 		font-size: 36rpx;
-		box-shadow:3px 2px 6px #000;
 	}
 
 	/*按钮点击效果*/
