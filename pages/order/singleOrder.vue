@@ -12,7 +12,7 @@
 					<view class="num">数量:{{item.num}}</view>
 					<view class="money">￥{{item.food_price}}</view>
 					<transition name="fade">
-						<image src="../../static/img/del.png" class="del_img" v-if="display" @click="del(item,index)"></image>
+						<image src="../../static/img/del.png" class="del_img" :class="{open:display}" @click="del(item,index)"></image>
 					</transition>
 				</view>
 			</view>
@@ -176,7 +176,9 @@
 
 <style lang="scss">
 	.open {
-		display: none;
+		visibility:hidden;
+				opacity: 0;
+				transition: 0.5s;
 	}
 
 	page {
@@ -190,15 +192,15 @@
 	}
 
 	.goods_time {
-		font-size: 25upx;
+		font-size: 25rpx;
 		color: #ffffff;
 		opacity: 0.7;
 		margin: 0 10rpx 10rpx 30rpx;
 	}
 
 	.clock_image {
-		width: 33.3upx;
-		height: 33.3upx;
+		width: 33.3rpx;
+		height: 33.3rpx;
 		margin: 0 10rpx 10rpx 30rpx;
 		float: left;
 	}
@@ -243,8 +245,8 @@
 			}
 
 			.del_img {
-				width: 60rpx;
-				height: 60rpx;
+				width: 50rpx;
+				height: 50rpx;
 				position: absolute;
 				right: 0rpx;
 				bottom: 15rpx;
@@ -265,45 +267,45 @@
 
 	.need_pay {
 		color: #00aaff;
-		font-size: 28upx;
+		font-size: 28rpx;
 		font-weight: 900;
 	}
 
 	.totalMoney {
 		color: #fa2a2d;
-		font-size: 31upx;
-		margin-right: 50upx;
+		font-size: 31rpx;
+		margin-right: 50rpx;
 	}
 
 	.state_btn {
 		display: flex;
 		justify-content: flex-end;
-		margin-top: 32.7upx;
-		margin-right: 33upx;
+		margin-top: 32.7rpx;
+		margin-right: 33rpx;
 	}
 
 	._btn {
-		width: 153upx;
-		height: 58upx;
+		width: 153rpx;
+		height: 58rpx;
 		text-align: center;
-		color: #0d8ada;
-		font-size: 28upx;
-		line-height: 58upx;
-		border: 3upx solid #0d8ada;
-		border-radius: 6upx;
+		color: $theme-color;
+		font-size: 28rpx;
+		line-height: 58rpx;
+		border: 4rpx solid $theme-color;
+		border-radius: 8rpx;
 		margin-right: 30rpx;
-		box-shadow:1px 1px 9px #000;
+		box-shadow:1px 1px 4px #000;
 	}
 
 	._btn2 {
-		width: 153upx;
-		height: 58upx;
+		width: 153rpx;
+		height: 58rpx;
 		text-align: center;
-		color: #ec070b;
-		font-size: 28upx;
-		line-height: 58upx;
-		border: 3upx solid #ec070b;
-		border-radius: 6upx;
+		color: #d63031;
+		font-size: 28rpx;
+		line-height: 58rpx;
+		border: 4rpx solid #d63031;
+		border-radius: 6rpx;
 		margin-right: 17rpx;
 	}
 
