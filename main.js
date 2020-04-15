@@ -13,6 +13,7 @@ Vue.prototype.ScanAudio = function(){
 		music.play(); //执行播放
 }
 Vue.prototype.$msg=util.msg
+Vue.prototype.$jump=util.jump
 
 App.mpType = 'app'
 

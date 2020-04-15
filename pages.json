@@ -13,7 +13,7 @@
 			}
 		},
 		{
-			"path": "pages/foods/foods",
+			"path": "pages/foods/menuList",
 			"style": {
 				"navigationBarTitleText": "菜品管理",
 				"app-plus": {
@@ -29,6 +29,18 @@
 						]
 					}
 				}
+			}
+		},
+		{
+			"path": "pages/foods/foods",
+			"style": {
+				"navigationBarTitleText": "上下架管理"
+			}
+		},
+		{
+			"path": "pages/foods/addFood",
+			"style": {
+				"navigationBarTitleText": "菜品添加"
 			}
 		},
 		{
@@ -55,7 +67,7 @@
 			"selectedIconPath": "static/tabbar/order1.png",
 			"text": "订单管理"
 		}, {
-			"pagePath": "pages/foods/foods",
+			"pagePath": "pages/foods/menuList",
 			"iconPath": "static/tabbar/food.png",
 			"selectedIconPath": "static/tabbar/food1.png",
 			"text": "菜品管理"
