@@ -26,7 +26,8 @@
 										<view class="money">￥{{ item.price }}</view>
 									</view>
 									<view class="state_btn">
-										<text class="_btn" @click="revise(item.id, item.status, index)">{{ item.status | brand }}</text>
+										<text class="_btn _btn1" @tap="revise(item.id, item.status, index)">{{ item.status | brand }}</text>
+										<text class="_btn _btn2" @tap="edit(item.id,item.type_id)">编辑</text>
 									</view>
 								</view>
 							</view>
@@ -143,9 +144,21 @@ export default {
 				// 振动反馈
 				uni.vibrateShort({
 					success: function() {
-						console.log('success');
+						console.log('上下架按钮震动反馈');
 					}
 				});
+		},
+		edit(foodId,typeId){
+			uni.navigateTo({
+				url: 'editFood?food_id=' + foodId +'&type_id=' + typeId
+			});
+			
+			// 振动反馈
+			uni.vibrateShort({
+				success: function() {
+					console.log('编辑按钮震动反馈');
+				}
+			});
 		}
 	}
 };
@@ -202,8 +215,9 @@ page {
 
 			&.active,
 			&:active {
-				color: #0d8ada;
+				color: $theme-color;
 				background-color: #4f496c;
+				border-left: $theme-color 8rpx solid;
 			}
 		}
 	}
@@ -263,7 +277,7 @@ page {
 				font-size: 30rpx;
 				color: #efba21;
 				position: absolute;
-				right: 200rpx;
+				right: 285rpx;
 				bottom: 13rpx;
 			}
 
@@ -286,18 +300,26 @@ page {
 				width: 90rpx;
 				height: 45rpx;
 				text-align: center;
-				color: #0d8ada;
 				font-size: 28rpx;
 				font-weight: 700;
 				line-height: 45rpx;
-				border: 3rpx solid #0d8ada;
 				border-radius: 6rpx;
 				// margin-right: 30rpx;
 			}
-		}
-		._btn:active {
+			._btn1{
+				color: #0d8ada;
+				border: 3rpx solid #0d8ada;
+				margin-right: 6rpx;
+			}
+			._btn2{
+				color: #00aa00;
+				border: 3rpx solid #00aa00;
+			}
+			._btn:active {
 			transform: translate(4rpx, 4rpx);
 		}
+		}
+		
 	}
 }
 </style>

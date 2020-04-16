@@ -4,8 +4,8 @@
 			<image src="../../static/logo.png"></image>
 		</view>
 		<view class="zai-form">
-			<input class="zai-input" v-model="userEmail" placeholder="账号" />
-			<input class="zai-input" v-model="passData" password placeholder="密码" />
+			<input class="zai-input" v-model="userEmail" type="number" placeholder="账号" />
+			<input class="zai-input" v-model="passData" type="number" password placeholder="密码" />
 			<button class="zai-btn" @click="startLogin()">立即登录</button>
 		</view>
 		<view class="bottom_con">

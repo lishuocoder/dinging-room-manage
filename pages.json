@@ -20,13 +20,12 @@
 					"bounce": "none",
 					"titleNView": {
 						"buttons": [{
-								"fontSrc": "/static/tabbar/iconfont.ttf",
-								"text": "\ue66e   ",
-								"fontSize": "18",
-								"float": "right",
-								"color": "#323458"
-							}
-						]
+							"fontSrc": "/static/tabbar/iconfont.ttf",
+							"text": "\ue66e   ",
+							"fontSize": "18",
+							"float": "right",
+							"color": "#323458"
+						}]
 					}
 				}
 			}
@@ -34,7 +33,7 @@
 		{
 			"path": "pages/foods/foods",
 			"style": {
-				"navigationBarTitleText": "上下架管理"
+				"navigationBarTitleText": "菜品管理lslA"
 			}
 		},
 		{
@@ -47,6 +46,11 @@
 			"path": "pages/order/singleOrder",
 			"style": {
 				"navigationBarTitleText": "订单"
+			}
+		}, {
+			"path": "pages/foods/editFood",
+			"style": {
+				"navigationBarTitleText": "修改菜品"
 			}
 		}
 	],

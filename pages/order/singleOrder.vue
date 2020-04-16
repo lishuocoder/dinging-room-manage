@@ -45,7 +45,7 @@
 				list: [],
 				order_time: 2020,
 				total_price: {},
-				display: false,
+				display: true,
 				text: "修改订单",
 				show: false,
 				Token: 0

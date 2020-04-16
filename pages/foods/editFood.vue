@@ -3,7 +3,7 @@
 		<view class="feedback-title"><text>菜品名称</text></view>
 		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.contact" placeholder="请输入菜品名称" /></view>
 
-		<view class="feedback-title"><text>价  格(￥)</text></view>
+		<view class="feedback-title"><text>价 格(￥)</text></view>
 		<view class="feedback-body"><input class="feedback-input" type="number" v-model="sendDate.price" placeholder="请输入菜品价格" /></view>
 
 		<view class="feedback-title">分类选择</view>
@@ -42,8 +42,7 @@
 			</view>
 		</view>
 
-		<button type="primary" class="feedback-submit" @tap="send">添加菜品</button>
-		<view class="feedback-title"><text>添加后直接添加到菜品列表，可在上下架管理中下架该菜品</text></view>
+		<button type="primary" class="feedback-submit" @tap="send">修改该菜品</button>
 	</view>
 </template>
 
@@ -56,14 +55,26 @@ export default {
 			msgContents: ['烧烤伴侣', '烤鱼，牛蛙必点配菜', '味甜的味道，给你可口又清爽', '不放任何添加剂，价格实惠，超值！'],
 			imageList: [],
 			sendDate: {
-				contact: '',
-				price: '',
-				type: '',
-				content: ''
-			}
+				contact:'0',
+				price: '0',
+				type: '0',
+				content: '0'
+			},
+			Token: 0,
+			foodID: 0,
+			typeID: 0,
+			foodsDetails: []
 		};
 	},
-	onLoad() {
+	onLoad(option) {
+		//获取存入的token
+		uni.getStorage({
+			key: 'token',
+			success: res => {
+				this.Token = res.data;
+			}
+		});
+
 		uni.request({
 			//服务端分类接口
 			url: this.$apiPath + '?c=type&a=index',
@@ -76,12 +87,37 @@ export default {
 				}
 			}
 		});
+		this.foodID = option.food_id; //传过来要修改的菜品ID
+		this.typeID = option.type_id; //修改菜品所属于的分类ID
+
+		uni.request({
+			//菜品接口
+			url: this.$apiPath + '?m=admin&c=food&a=index',
+			data: {
+				token: this.Token,
+				type_id: this.typeID
+			},
+			success: res => {
+				var reslist = res.data.data;
+				this.foodsDetails= reslist.find((item)=>{
+					if(item.id===this.foodID){
+						return item;
+					}
+				});
+				console.log(this.foodsDetails);//得到当前菜品的详细信息
+				this.sendDate.contact=this.foodsDetails.name;
+				this.sendDate.price=this.foodsDetails.price;
+				this.index=this.foodsDetails.type_id;
+				this.sendDate.content=this.foodsDetails.content;
+				this.imageList.push(this.foodsDetails.img);
+			}
+		});
 	},
 	methods: {
 		bindPickerChange(e) {
 			console.log('picker发送选择改变，携带值为', e.target.value);
 			this.index = e.target.value;
-			this.sendDate.type=this.typeList[e.target.value];
+			this.sendDate.type = this.typeList[e.target.value];
 		},
 		close(e) {
 			this.imageList.splice(e, 1);

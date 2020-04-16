@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
-		<list-card title="上下架管理" desc="可以进行菜品的上下架管理" src="/static/img/up.png" @click.native="onClickFoodlist"></list-card>
-		<list-card title="添加菜品" desc="可以添加新菜品" src="/static/img/add.png" @click.native="onClickAdd"></list-card>
+		<list-card title="菜品管理" desc="菜品上下架管理及编辑菜品" src="/static/img/up.png" @click.native="onClickFoodlist"></list-card>
+		<list-card title="添加菜品" desc="可添加新菜品" src="/static/img/add.png" @click.native="onClickAdd"></list-card>
 		<list-card title="新功能" desc="敬请期待" src="/static/img/tj.png" @click.native="onClickTj"></list-card>
 	</view>
 </template>
