@@ -1,26 +1,35 @@
 <template>
 	<view class="page">
 		<view class="feedback-title"><text>菜品名称</text></view>
-		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.contact" placeholder="请输入菜品名称" /></view>
+		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.name" placeholder="请输入菜品名称" /></view>
 
 		<view class="feedback-title"><text>价 格(￥)</text></view>
 		<view class="feedback-body"><input class="feedback-input" type="number" v-model="sendDate.price" placeholder="请输入菜品价格" /></view>
-
+		
+		<view class="feedback-title"><text>简单说明</text></view>
+		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.explan" maxlength="6" placeholder="1到6个字" /></view>
+		
+		
 		<view class="feedback-title">分类选择</view>
 		<view class="feedback-body">
 			<view class="feedback-input">
-				<picker @change="bindPickerChange" :value="index" :range="typeList" v-model="sendDate.type">
+				<picker @change="bindPickerChange" :value="index" :range="typeList" >
 					<view class="uni-input">{{ typeList[index] }}</view>
 				</picker>
 			</view>
 		</view>
 
 		<view class="feedback-title">
-			<text>说明</text>
+			<text>详细说明</text>
 			<text class="feedback-quick" @tap="chooseMsg">快速键入</text>
 		</view>
 		<view class="feedback-body"><textarea placeholder="请输入菜品详细说明..." v-model="sendDate.content" class="feedback-textare" /></view>
-
+			
+		<view class="feedback-title">
+			<text>上下架(选中为上架)</text>
+			<switch :checked=check color="#5479e3" @change="switchChange" />
+		</view>
+			
 		<view class="feedback-title"><text>菜品照片(大小100k以下)</text></view>
 		<view class="feedback-body feedback-uploader">
 			<view class="uni-uploader">
@@ -55,11 +64,14 @@ export default {
 			msgContents: ['烧烤伴侣', '烤鱼，牛蛙必点配菜', '味甜的味道，给你可口又清爽', '不放任何添加剂，价格实惠，超值！'],
 			imageList: [],
 			sendDate: {
-				contact:'0',
-				price: '0',
+				name:0,
+				price:'0',
+				explan:0,
 				type: '0',
+				status:1,
 				content: '0'
 			},
+			check:true,
 			Token: 0,
 			foodID: 0,
 			typeID: 0,
@@ -105,11 +117,18 @@ export default {
 					}
 				});
 				console.log(this.foodsDetails);//得到当前菜品的详细信息
-				this.sendDate.contact=this.foodsDetails.name;
+				this.sendDate.name=this.foodsDetails.name;
 				this.sendDate.price=this.foodsDetails.price;
+				this.sendDate.explan=this.foodsDetails.explain
 				this.index=this.foodsDetails.type_id;
+				this.status=this.foodsDetails.status;
 				this.sendDate.content=this.foodsDetails.content;
 				this.imageList.push(this.foodsDetails.img);
+				if(this.foodsDetails.status==1){
+					this.check=true;//switch是否选中
+				}else{
+					this.check=false;
+				}
 			}
 		});
 	},
@@ -118,6 +137,7 @@ export default {
 			console.log('picker发送选择改变，携带值为', e.target.value);
 			this.index = e.target.value;
 			this.sendDate.type = this.typeList[e.target.value];
+			this.typeID=e.target.value;
 		},
 		close(e) {
 			this.imageList.splice(e, 1);
@@ -149,43 +169,47 @@ export default {
 				urls: this.imageList
 			});
 		},
+		//switch改变
+		switchChange(e){
+			 console.log('switch1 发生 change 事件，携带值为', e.target.value);
+			 if(e.target.value){
+				 this.status=1;
+			 }else{
+				 this.status=0;
+			 }
+		},
+		// 修改方法
 		send() {
-			//发送反馈
-			console.log(JSON.stringify(this.sendDate));
-			let imgs = this.imageList.map((value, index) => {
-				return {
-					name: 'image' + index,
-					uri: value
-				};
-			});
-			console.log(imgs);
-			uni.uploadFile({
-				url: this.$apiPath + '?c=upload&a=uploadImg',
-				files: imgs,
-				formData: this.sendDate,
-				success: res => {
-					if (res.statusCode === 200) {
-						uni.showToast({
-							title: '添加成功!'
-						});
-						this.imageList = [];
-						this.sendDate = {
-							contact: '',
-							price: '',
-							type: '',
-							content: ''
-						};
-					}
+			console.log(this.sendDate);
+			console.log(this.typeID)
+			//修改菜品接口
+			uni.request({
+				url: this.$apiPath + '?m=admin&c=food&a=update',
+				method: 'POST',
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
 				},
-				fail: res => {
-					uni.showToast({
-						title: '失败',
-						icon: 'none'
-					});
-					console.log(res);
+				data: {
+					token: this.Token,
+					food_id: this.foodID,
+					name:this.sendDate.name,
+					explain:this.sendDate.explan,
+					type_id:this.typeID,
+					status:this.status,
+					price:this.sendDate.price,
+					content:this.sendDate.content
+				},
+				success: res => {
+					console.log("修改成功");
+					this.$msg("修改成功",2000);
+					this.$jump('foods');
 				}
-			});
+			})
+			
 		}
+	},
+	onShow() {
+		this.$forceUpdate() //强制刷新组件
 	}
 };
 </script>

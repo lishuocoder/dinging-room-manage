@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		<view class="feedback-title"><text>菜品名称</text></view>
-		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.contact" placeholder="请输入菜品名称" /></view>
+		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.name" placeholder="请输入菜品名称" /></view>
 
 		<view class="feedback-title"><text>价  格(￥)</text></view>
 		<view class="feedback-body"><input class="feedback-input" type="number" v-model="sendDate.price" placeholder="请输入菜品价格" /></view>
@@ -56,7 +56,7 @@ export default {
 			msgContents: ['烧烤伴侣', '烤鱼，牛蛙必点配菜', '味甜的味道，给你可口又清爽', '不放任何添加剂，价格实惠，超值！'],
 			imageList: [],
 			sendDate: {
-				contact: '',
+				name: '',
 				price: '',
 				type: '',
 				content: ''
@@ -81,7 +81,7 @@ export default {
 		bindPickerChange(e) {
 			console.log('picker发送选择改变，携带值为', e.target.value);
 			this.index = e.target.value;
-			this.sendDate.type=this.typeList[e.target.value];
+			this.sendDate.type=e.target.value;
 		},
 		close(e) {
 			this.imageList.splice(e, 1);
@@ -99,7 +99,7 @@ export default {
 			//选择图片
 			uni.chooseImage({
 				sourceType: ['camera', 'album'],
-				sizeType: 'compressed',
+				sizeType: 'compressed',//上传压缩图
 				count: 8 - this.imageList.length,
 				success: res => {
 					this.imageList = this.imageList.concat(res.tempFilePaths);
@@ -125,27 +125,31 @@ export default {
 			console.log(imgs);
 			uni.uploadFile({
 				url: this.$apiPath + '?c=upload&a=uploadImg',
-				files: imgs,
+				// files: imgs,
+				// filePath:imgs,
 				formData: this.sendDate,
+				// 接口调用成功的回调函数	
 				success: res => {
 					if (res.statusCode === 200) {
+						console.log(res,"添加成功了");
 						uni.showToast({
 							title: '添加成功!'
 						});
-						this.imageList = [];
+						// this.imageList = [];
 						this.sendDate = {
-							contact: '',
+							name: '',
 							price: '',
 							type: '',
 							content: ''
 						};
 					}
 				},
+				// 接口调用失败的回调函数
 				fail: res => {
 					uni.showToast({
 						title: '失败',
-						icon: 'none'
-					});
+						icon:'none'
+						});
 					console.log(res);
 				}
 			});
