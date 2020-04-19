@@ -69,7 +69,7 @@ export default {
 				price:'0',
 				explain:0,
 				type: '0',
-				status:1,
+				status:0,
 				content: '0',
 				image: null
 			},
@@ -123,7 +123,7 @@ export default {
 				this.sendDate.price=this.foodsDetails.price;
 				this.sendDate.explain=this.foodsDetails.explain
 				this.index=this.foodsDetails.type_id;
-				this.status=this.foodsDetails.status;
+				this.sendDate.status=this.foodsDetails.status;
 				this.sendDate.content=this.foodsDetails.content;
 				this.sendDate.image=this.foodsDetails.img;
 				this.imageList.push(this.foodsDetails.img);
@@ -194,9 +194,9 @@ export default {
 		switchChange(e){
 			 console.log('switch1 发生 change 事件，携带值为', e.target.value);
 			 if(e.target.value){
-				 this.status=1;
+				 this.sendDate.status=1;
 			 }else{
-				 this.status=0;
+				 this.sendDate.status=0;
 			 }
 		},
 		// 修改方法
@@ -216,7 +216,7 @@ export default {
 					name:this.sendDate.name,
 					explain:this.sendDate.explain,
 					type_id:this.typeID,
-					status:this.status,
+					status:this.sendDate.status,
 					price:this.sendDate.price,
 					content:this.sendDate.content,
 					img: this.sendDate.image

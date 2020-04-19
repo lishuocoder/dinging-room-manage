@@ -77,7 +77,7 @@ export default {
 				price: '',
 				explain: '',
 				type: '',
-				status: 1,
+				status: 3,
 				sort: '',
 				content: '',
 				image: ''
@@ -170,9 +170,9 @@ export default {
 		switchChange(e) {
 			console.log('switch1 发生 change 事件，携带值为', e.target.value);
 			if (e.target.value) {
-				this.status = 1;
+				this.sendDate.status = 1;
 			} else {
-				this.status = 0;
+				this.sendDate.status = 0;
 			}
 		},
 		send() {
