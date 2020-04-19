@@ -82,7 +82,7 @@ export default {
 		brand(val) {
 			var brand;
 			if (val == 0) {
-				brand = '上架';
+				brand = '已下架';
 			} else if (val == 1) {
 				brand = '下架';
 			}
@@ -149,7 +149,7 @@ export default {
 				});
 		},
 		edit(foodId,typeId){
-			uni.navigateTo({
+			uni.redirectTo({
 				url: 'editFood?food_id=' + foodId +'&type_id=' + typeId
 			});
 			
@@ -162,7 +162,7 @@ export default {
 		}
 	},
 	onShow() {
-		this.$forceUpdate() //强制刷新组件
+		this.$forceUpdate() //强制刷新
 	}
 	
 };

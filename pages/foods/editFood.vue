@@ -70,7 +70,8 @@ export default {
 				explain:0,
 				type: '0',
 				status:1,
-				content: '0'
+				content: '0',
+				image: null
 			},
 			check:true,
 			Token: 0,
@@ -124,6 +125,7 @@ export default {
 				this.index=this.foodsDetails.type_id;
 				this.status=this.foodsDetails.status;
 				this.sendDate.content=this.foodsDetails.content;
+				this.sendDate.image=this.foodsDetails.img;
 				this.imageList.push(this.foodsDetails.img);
 				if(this.foodsDetails.status==1){
 					this.check=true;//switch是否选中
@@ -160,6 +162,24 @@ export default {
 				count: 8 - this.imageList.length,
 				success: res => {
 					this.imageList = this.imageList.concat(res.tempFilePaths);
+					
+					uni.uploadFile({
+						// 上传图片接口
+						url: this.$apiPath +'?c=upload&a=uploadImg',
+						filePath: res.tempFilePaths[0],
+						name: 'img',
+						// header:{"Content-Type": "multipart/form-data"},
+						success: res => {
+							console.log(JSON.parse(res.data).data);
+							this.sendDate.image=(JSON.parse(res.data).data.thumb_img);
+						},
+						fail: res => {
+							uni.showToast({
+								title: '失败',
+								icon: 'none'
+							});
+						}
+					});
 				}
 			});
 		},
@@ -198,12 +218,16 @@ export default {
 					type_id:this.typeID,
 					status:this.status,
 					price:this.sendDate.price,
-					content:this.sendDate.content
+					content:this.sendDate.content,
+					img: this.sendDate.image
 				},
 				success: res => {
 					console.log("修改成功");
 					this.$msg("修改成功",2000);
-					this.$jump('foods');
+					// this.$jump('foods');
+					uni.redirectTo({
+						url:'foods'
+					})
 				}
 			})
 			

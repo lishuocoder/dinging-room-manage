@@ -132,7 +132,9 @@ export default {
 		latticeClick(id, orderid) {
 			console.log('座位号' + id, '订单id' + orderid);
 			uni.navigateTo({
-				url: '/pages/order/singleOrder?desk_id=' + id + '&order_id=' + orderid
+				url: '/pages/order/singleOrder?desk_id=' + id + '&order_id=' + orderid,
+				animationType: 'zoom-fade-out',
+				animationDuration: 200
 			});
 			// 震动反馈
 			uni.vibrateShort({

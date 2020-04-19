@@ -32,7 +32,7 @@
 		<view class="feedback-title"><text>排序</text></view>
 		<view class="feedback-body"><input class="feedback-input" type="number" v-model="sendDate.sort" placeholder="数字越大,顺序越靠后" /></view>
 
-		<view class="feedback-title"><text>菜品照片(大小100k以下)</text></view>
+		<view class="feedback-title"><text>菜品照片(建议大小100k以下)</text></view>
 		<view class="feedback-body feedback-uploader">
 			<view class="uni-uploader">
 				<view class="uni-uploader-head">
@@ -53,7 +53,7 @@
 			</view>
 		</view>
 
-		<button type="primary" class="feedback-submit" @tap="send" :disabled="disabled" :loading="disabled"	>添加菜品</button>
+		<button type="primary" class="feedback-submit" @tap="send" :disabled="disabled" :loading="disabled">添加菜品</button>
 		<view class="feedback-title"><text>添加后直接添加到菜品列表，可在上下架管理中下架该菜品</text></view>
 		<warningBox v-model="show" title="错误" text="请添加完整的菜品信息" noCancel @confirm="confirm"></warningBox>
 	</view>
@@ -80,11 +80,11 @@ export default {
 				status: 1,
 				sort: '',
 				content: '',
-				img: 'http://dining-room3.local/upload/2020-04-18/dffb392a471aa77f6daafba2a6a9581e.jpeg'
+				image: ''
 			},
 			typeID: 0,
 			show: false,
-			disabled:false
+			disabled: false
 		};
 	},
 	onLoad() {
@@ -137,6 +137,25 @@ export default {
 				count: 8 - this.imageList.length,
 				success: res => {
 					this.imageList = this.imageList.concat(res.tempFilePaths);
+
+					uni.uploadFile({
+						// 上传图片接口
+						url: this.$apiPath +'?c=upload&a=uploadImg',
+						filePath: res.tempFilePaths[0],
+						name: 'img',
+						// header:{"Content-Type": "multipart/form-data"},
+						success: res => {
+							console.log(JSON.parse(res.data).data);
+							this.sendDate.image=(JSON.parse(res.data).data.thumb_img);
+							console.log(image);
+						},
+						fail: res => {
+							uni.showToast({
+								title: '失败',
+								icon: 'none'
+							});
+						}
+					});
 				}
 			});
 		},
@@ -179,7 +198,7 @@ export default {
 					sort: this.sendDate.sort,
 					price: this.sendDate.price,
 					content: this.sendDate.content,
-					img: this.sendDate.img
+					img: this.sendDate.image
 				},
 				success: res => {
 					console.log(res);
@@ -188,12 +207,12 @@ export default {
 						console.log('出错');
 					} else {
 						this.$msg('添加成功', 1000);
-						this.disabled=true;
+						this.disabled = true;
 						setTimeout(() => {
 							uni.switchTab({
 								url: 'menuList'
 							});
-						},1000);
+						}, 1000);
 					}
 				}
 			});

@@ -20,7 +20,12 @@ export default {
 	onLoad() {},
 	methods: {
 		onClickFoodlist() {
-			this.$jump('./foods');
+			// this.$jump('./foods');
+			uni.navigateTo({
+				url: './foods',
+				animationType: 'zoom-fade-out',
+				    animationDuration: 200
+			});
 			// 震动反馈
 			uni.vibrateShort({
 				success: function() {
@@ -29,7 +34,12 @@ export default {
 			});
 		},
 		onClickAdd(){
-			this.$jump('./addFood');
+			// this.$jump('./addFood');
+			uni.navigateTo({
+				url: './addFood',
+				animationType: 'zoom-fade-out',
+				    animationDuration: 200
+			});
 			// 震动反馈
 			uni.vibrateShort({
 				success: function() {
@@ -50,7 +60,7 @@ export default {
 	},
 	//退出登录方法
 	onNavigationBarButtonTap() {
-		uni.navigateTo({
+		uni.reLaunch({/** 关闭所有页面，跳转到登陆页面*/
 			url: '/pages/login/login'
 		});
 	}
