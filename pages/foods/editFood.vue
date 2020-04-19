@@ -7,7 +7,7 @@
 		<view class="feedback-body"><input class="feedback-input" type="number" v-model="sendDate.price" placeholder="请输入菜品价格" /></view>
 		
 		<view class="feedback-title"><text>简单说明</text></view>
-		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.explan" maxlength="6" placeholder="1到6个字" /></view>
+		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.explain" maxlength="6" placeholder="1到6个字" /></view>
 		
 		
 		<view class="feedback-title">分类选择</view>
@@ -29,6 +29,7 @@
 			<text>上下架(选中为上架)</text>
 			<switch :checked=check color="#5479e3" @change="switchChange" />
 		</view>
+			
 			
 		<view class="feedback-title"><text>菜品照片(大小100k以下)</text></view>
 		<view class="feedback-body feedback-uploader">
@@ -66,7 +67,7 @@ export default {
 			sendDate: {
 				name:0,
 				price:'0',
-				explan:0,
+				explain:0,
 				type: '0',
 				status:1,
 				content: '0'
@@ -119,7 +120,7 @@ export default {
 				console.log(this.foodsDetails);//得到当前菜品的详细信息
 				this.sendDate.name=this.foodsDetails.name;
 				this.sendDate.price=this.foodsDetails.price;
-				this.sendDate.explan=this.foodsDetails.explain
+				this.sendDate.explain=this.foodsDetails.explain
 				this.index=this.foodsDetails.type_id;
 				this.status=this.foodsDetails.status;
 				this.sendDate.content=this.foodsDetails.content;
@@ -181,7 +182,7 @@ export default {
 		// 修改方法
 		send() {
 			console.log(this.sendDate);
-			console.log(this.typeID)
+			// console.log(this.typeID)
 			//修改菜品接口
 			uni.request({
 				url: this.$apiPath + '?m=admin&c=food&a=update',
@@ -193,7 +194,7 @@ export default {
 					token: this.Token,
 					food_id: this.foodID,
 					name:this.sendDate.name,
-					explain:this.sendDate.explan,
+					explain:this.sendDate.explain,
 					type_id:this.typeID,
 					status:this.status,
 					price:this.sendDate.price,
@@ -207,10 +208,8 @@ export default {
 			})
 			
 		}
-	},
-	onShow() {
-		this.$forceUpdate() //强制刷新组件
 	}
+	
 };
 </script>
 

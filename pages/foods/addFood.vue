@@ -3,23 +3,34 @@
 		<view class="feedback-title"><text>菜品名称</text></view>
 		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.name" placeholder="请输入菜品名称" /></view>
 
-		<view class="feedback-title"><text>价  格(￥)</text></view>
+		<view class="feedback-title"><text>价 格(￥)</text></view>
 		<view class="feedback-body"><input class="feedback-input" type="number" v-model="sendDate.price" placeholder="请输入菜品价格" /></view>
+
+		<view class="feedback-title"><text>简单说明</text></view>
+		<view class="feedback-body"><input class="feedback-input" v-model="sendDate.explain" maxlength="6" placeholder="1到6个字" /></view>
 
 		<view class="feedback-title">分类选择</view>
 		<view class="feedback-body">
 			<view class="feedback-input">
-				<picker @change="bindPickerChange" :value="index" :range="typeList" v-model="sendDate.type">
+				<picker @change="bindPickerChange" :value="index" :range="typeList">
 					<view class="uni-input">{{ typeList[index] }}</view>
 				</picker>
 			</view>
 		</view>
 
 		<view class="feedback-title">
-			<text>说明</text>
+			<text>详细说明</text>
 			<text class="feedback-quick" @tap="chooseMsg">快速键入</text>
 		</view>
 		<view class="feedback-body"><textarea placeholder="请输入菜品详细说明..." v-model="sendDate.content" class="feedback-textare" /></view>
+
+		<view class="feedback-title">
+			<text>上下架(选中为上架)</text>
+			<switch checked color="#5479e3" @change="switchChange" />
+		</view>
+
+		<view class="feedback-title"><text>排序</text></view>
+		<view class="feedback-body"><input class="feedback-input" type="number" v-model="sendDate.sort" placeholder="数字越大,顺序越靠后" /></view>
 
 		<view class="feedback-title"><text>菜品照片(大小100k以下)</text></view>
 		<view class="feedback-body feedback-uploader">
@@ -42,13 +53,19 @@
 			</view>
 		</view>
 
-		<button type="primary" class="feedback-submit" @tap="send">添加菜品</button>
+		<button type="primary" class="feedback-submit" @tap="send" :disabled="disabled" :loading="disabled"	>添加菜品</button>
 		<view class="feedback-title"><text>添加后直接添加到菜品列表，可在上下架管理中下架该菜品</text></view>
+		<warningBox v-model="show" title="错误" text="请添加完整的菜品信息" noCancel @confirm="confirm"></warningBox>
 	</view>
 </template>
 
 <script>
+import warningBox from '@/components/warning-box/warning-box.vue';
+
 export default {
+	components: {
+		warningBox
+	},
 	data() {
 		return {
 			typeList: ['请选择分类'],
@@ -58,12 +75,27 @@ export default {
 			sendDate: {
 				name: '',
 				price: '',
+				explain: '',
 				type: '',
-				content: ''
-			}
+				status: 1,
+				sort: '',
+				content: '',
+				img: 'http://dining-room3.local/upload/2020-04-18/dffb392a471aa77f6daafba2a6a9581e.jpeg'
+			},
+			typeID: 0,
+			show: false,
+			disabled:false
 		};
 	},
 	onLoad() {
+		//获取存入的token
+		uni.getStorage({
+			key: 'token',
+			success: res => {
+				this.Token = res.data;
+			}
+		});
+
 		uni.request({
 			//服务端分类接口
 			url: this.$apiPath + '?c=type&a=index',
@@ -76,12 +108,14 @@ export default {
 				}
 			}
 		});
+		this.index = this.typeID;
 	},
 	methods: {
 		bindPickerChange(e) {
 			console.log('picker发送选择改变，携带值为', e.target.value);
 			this.index = e.target.value;
-			this.sendDate.type=e.target.value;
+			this.sendDate.type = e.target.value;
+			this.typeID = e.target.value;
 		},
 		close(e) {
 			this.imageList.splice(e, 1);
@@ -99,7 +133,7 @@ export default {
 			//选择图片
 			uni.chooseImage({
 				sourceType: ['camera', 'album'],
-				sizeType: 'compressed',//上传压缩图
+				sizeType: 'compressed', //上传压缩图
 				count: 8 - this.imageList.length,
 				success: res => {
 					this.imageList = this.imageList.concat(res.tempFilePaths);
@@ -113,47 +147,58 @@ export default {
 				urls: this.imageList
 			});
 		},
+		//switch改变
+		switchChange(e) {
+			console.log('switch1 发生 change 事件，携带值为', e.target.value);
+			if (e.target.value) {
+				this.status = 1;
+			} else {
+				this.status = 0;
+			}
+		},
 		send() {
-			//发送反馈
-			console.log(JSON.stringify(this.sendDate));
-			let imgs = this.imageList.map((value, index) => {
-				return {
-					name: 'image' + index,
-					uri: value
-				};
-			});
-			console.log(imgs);
-			uni.uploadFile({
-				url: this.$apiPath + '?c=upload&a=uploadImg',
-				// files: imgs,
-				// filePath:imgs,
-				formData: this.sendDate,
-				// 接口调用成功的回调函数	
-				success: res => {
-					if (res.statusCode === 200) {
-						console.log(res,"添加成功了");
-						uni.showToast({
-							title: '添加成功!'
-						});
-						// this.imageList = [];
-						this.sendDate = {
-							name: '',
-							price: '',
-							type: '',
-							content: ''
-						};
-					}
+			console.log(this.sendDate);
+			if (this.typeID == 0) {
+				this.show = true;
+				console.log('出错');
+				return;
+			}
+			//添加菜品接口
+			uni.request({
+				url: this.$apiPath + '?m=admin&c=food&a=create',
+				method: 'POST',
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
 				},
-				// 接口调用失败的回调函数
-				fail: res => {
-					uni.showToast({
-						title: '失败',
-						icon:'none'
-						});
+				data: {
+					token: this.Token,
+					name: this.sendDate.name,
+					explain: this.sendDate.explain,
+					type_id: this.typeID,
+					status: this.sendDate.status,
+					sort: this.sendDate.sort,
+					price: this.sendDate.price,
+					content: this.sendDate.content,
+					img: this.sendDate.img
+				},
+				success: res => {
 					console.log(res);
+					if (res.data.error != 0) {
+						this.show = true;
+						console.log('出错');
+					} else {
+						this.$msg('添加成功', 1000);
+						this.disabled=true;
+						setTimeout(() => {
+							uni.switchTab({
+								url: 'menuList'
+							});
+						},1000);
+					}
 				}
 			});
-		}
+		},
+		confirm() {}
 	}
 };
 </script>

@@ -160,7 +160,11 @@ export default {
 				}
 			});
 		}
+	},
+	onShow() {
+		this.$forceUpdate() //强制刷新组件
 	}
+	
 };
 </script>
 
