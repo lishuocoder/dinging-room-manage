@@ -2,8 +2,8 @@
     "name" : "点餐系统服务端",
     "appid" : "__UNI__1EAABDB",
     "description" : "",
-    "versionName" : "2.3.3",
-    "versionCode" : 233,
+    "versionName" : "2.3.4",
+    "versionCode" : 234,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {

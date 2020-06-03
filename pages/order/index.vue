@@ -6,11 +6,11 @@
 					shadow
 					:progressPercent="time(item)"
 					:progressColor="textColor(item.id)"
-					title="桌位"
+					 title="桌位"
 					:numColor="textColor(item.id)"
 					:num="item.id"
 					:unit="statusName(item.status).name"
-					type="img"
+					 type="img"
 					:src="statusName(item.status).img"
 					@click="latticeClick(item.id, item.order.id)"
 				/>
@@ -139,7 +139,7 @@ export default {
 			// 震动反馈
 			uni.vibrateShort({
 				success: function() {
-					console.log('success');
+					console.log('震动反馈');
 				}
 			});
 		}

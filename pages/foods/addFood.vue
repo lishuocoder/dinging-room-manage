@@ -77,7 +77,7 @@ export default {
 				price: '',
 				explain: '',
 				type: '',
-				status: 3,
+				status: 1,
 				sort: '',
 				content: '',
 				image: ''
